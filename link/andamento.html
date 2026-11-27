@@ -52,6 +52,7 @@
   .eyebrow { font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
   h1 { margin: 0; font-size: clamp(1.9rem, 1.4rem + 2vw, 2.6rem); line-height: 1.1; letter-spacing: -.02em; text-wrap: balance; }
   .updated { color: var(--muted); font-size: .92rem; }
+  .updated.is-live { color: var(--ok); }
 
   /* Resumo */
   .summary { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1.5rem; display: grid; gap: 1.25rem; }
@@ -158,7 +159,6 @@
     const ds = data.demandas;
     const all = ds.flatMap((d) => d.tasks), feitas = all.filter((t) => t.done).length;
     const pct = all.length ? Math.round((feitas / all.length) * 100) : 0;
-    document.getElementById("updated").textContent = "Atualizado em " + fmtWhen(data.atualizado);
     document.getElementById("pct").textContent = pct + "%";
     document.getElementById("pctTxt").textContent = `das tarefas concluídas · ${feitas} de ${all.length}`;
     const mb = document.getElementById("mainBar"); mb.style.setProperty("--v", pct + "%"); mb.classList.toggle("done", pct === 100);
@@ -188,7 +188,7 @@
         <div class="prog"><div class="bar ${p === 100 ? "done" : ""}" style="--v:${p}%"><i></i></div><span>${k} de ${t} · ${p}%</span></div>
         <div class="tasks">
           ${done.length ? `<div class="donelist"><span class="lbl">Já feito</span><ul class="tl">${done.map((x) => `<li class="ok"><span class="mk">✓</span><span class="tx">${esc(x.text)}</span></li>`).join("")}</ul></div>` : ""}
-          ${t ? `<details><summary>Ver todas as ${t} tarefas</summary><ul class="tl">${d.tasks.map((x) => `<li class="${x.done ? "ok" : ""}"><span class="mk">${x.done ? "✓" : ""}</span><span class="tx">${esc(x.text)}</span></li>`).join("")}</ul></details>` : ""}
+          ${t ? `<details data-n="${esc(d.num)}"><summary>Ver todas as ${t} tarefas</summary><ul class="tl">${d.tasks.map((x) => `<li class="${x.done ? "ok" : ""}"><span class="mk">${x.done ? "✓" : ""}</span><span class="tx">${esc(x.text)}</span></li>`).join("")}</ul></details>` : ""}
         </div>
       </li>`;
     }).join("") : `<li class="empty">Nenhuma demanda com esse status.</li>`;
@@ -201,12 +201,45 @@
     render();
   });
 
-  fetch("progresso.json", { cache: "no-store" })
-    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then((j) => { data = j; render(); })
-    .catch(() => {
-      document.getElementById("updated").textContent = "Não foi possível carregar o andamento.";
-      document.getElementById("list").innerHTML = `<li class="error">Os dados do plano não carregaram. Recarregue a página em alguns segundos.</li>`;
-    });
+  // Ao vivo: lê o progresso que o app envia ao GitHub (branch "dados") a cada 20 s.
+  // Respostas "não mudou" (304) não gastam o limite da API. Se a leitura ao vivo
+  // não for possível, usa o progresso.json publicado junto com a página.
+  const LIVE = "https://api.github.com/repos/Paulo31209/pa-ytnmab7bxz2m/contents/progresso.json?ref=dados";
+  let lastText = "", live = false, wait = 20000, timer;
+
+  function apply(text, isLive) {
+    live = isLive;
+    if (text !== lastText) {
+      lastText = text;
+      const open = [...document.querySelectorAll(".item details[open]")].map((d) => d.dataset.n);
+      data = JSON.parse(text); render();
+      open.forEach((n) => { const d = document.querySelector(`.item details[data-n="${CSS.escape(n)}"]`); if (d) d.open = true; });
+    }
+    const u = document.getElementById("updated");
+    u.textContent = "Atualizado em " + fmtWhen(data.atualizado) + (live ? " · ● ao vivo, atualiza sozinho" : "");
+    u.classList.toggle("is-live", live);
+  }
+  async function poll() {
+    clearTimeout(timer);
+    try {
+      const r = await fetch(LIVE, { cache: "no-cache", headers: { Accept: "application/vnd.github.raw+json" } });
+      if (r.ok) { apply(await r.text(), true); wait = 20000; }
+      else if (r.status === 403 || r.status === 429) wait = 300000; // limite da API: espera 5 min
+      else throw new Error(r.status);
+    } catch (e) {
+      if (!lastText) {
+        try { const r = await fetch("progresso.json", { cache: "no-store" }); if (!r.ok) throw 0; apply(await r.text(), false); }
+        catch { failed(); }
+      }
+      wait = Math.min(wait * 2, 300000);
+    }
+    if (!document.hidden) timer = setTimeout(poll, wait);
+  }
+  function failed() {
+    document.getElementById("updated").textContent = "Não foi possível carregar o andamento.";
+    document.getElementById("list").innerHTML = `<li class="error">Os dados do plano não carregaram. Recarregue a página em alguns segundos.</li>`;
+  }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) poll(); else clearTimeout(timer); });
+  poll();
 })();
 </script>

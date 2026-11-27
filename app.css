@@ -76,6 +76,10 @@ button { font: inherit; cursor: pointer; }
 .side-foot { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-1); border-block-start: 1px solid var(--sidebar-border); padding-block-start: var(--space-3); }
 .side-foot .btn { justify-content: flex-start; }
 .data-where { color: var(--subtle-foreground); font-size: var(--text-ui-xs); padding-inline: var(--space-2); line-height: 1.35; }
+.side-foot .pub-link { justify-content: center; text-decoration: none; }
+.pub-status { color: var(--success); }
+.pub-status.pub-err { color: var(--warning); }
+.linklike { border: 0; background: none; padding: 0; color: var(--primary); text-decoration: underline; font: inherit; cursor: pointer; }
 
 .topbar {
   position: sticky; inset-block-start: 0; z-index: var(--z-sticky);

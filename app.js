@@ -354,6 +354,7 @@
     else if (act === "export") { download(`plano-de-acao-${stamp()}.json`, JSON.stringify(state, null, 2), "application/json"); flashSaved("Backup baixado ✓"); }
     else if (act === "import") $("#importFile").click();
     else if (act === "open-folder" && DESK) DESK.openFolder();
+    else if (act === "pub-retry" && DESK) { $("#pubStatus").textContent = "Enviando…"; DESK.pubNow(); }
     else if (act === "reset") {
       if (confirm(`Voltar ao plano original?\n\nTudo o que você editou (tarefas, anotações, inventário e diário) será apagado${DESK ? "" : " deste navegador"}. ${DESK ? "O app guarda um backup automático por dia na pasta dos dados." : "Faça um Backup antes se quiser guardar."}`)) {
         state = makeDefaults(); save(); location.hash = "#/"; render();
@@ -487,6 +488,24 @@
       <button class="btn btn-ghost btn-sm" data-action="open-folder" style="grid-column:1/-1" title="${esc(dataInfo.path)}">📁 Abrir pasta dos dados</button>
       <small class="data-where" style="grid-column:1/-1">Salvo em Documentos › Plano de Ação · backup automático diário</small>`);
     $("#brandSub").textContent = "App do computador";
+
+    // Link público ao vivo (GitHub Pages): botão + situação do último envio.
+    if (DESK.pubInfo) {
+      DESK.pubInfo().then((info) => {
+        if (!info || !info.ativo) return;
+        foot.insertAdjacentHTML("afterbegin", `
+          <a class="btn btn-outline btn-sm pub-link" href="${esc(info.link)}" target="_blank" rel="noopener" style="grid-column:1/-1">🌐 Link público ao vivo</a>
+          <small class="data-where pub-status" id="pubStatus" style="grid-column:1/-1">Envia o progresso sozinho a cada alteração</small>`);
+        const show = (st) => {
+          const el = $("#pubStatus"); if (!el || !st) return;
+          const hora = new Date(st.when).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+          el.classList.toggle("pub-err", !st.ok);
+          el.innerHTML = st.ok ? `● No ar · conferido às ${hora}` : `⚠ Link não atualizado: ${esc(st.msg)} <button class="linklike" data-action="pub-retry">tentar de novo</button>`;
+        };
+        show(info.status);
+        DESK.onPubStatus(show);
+      });
+    }
     if (!dataInfo.data) save(); // primeira abertura: já cria o arquivo
     if (dataInfo.recovered) setTimeout(() => alert("O arquivo de dados estava danificado. O app carregou o último backup automático e guardou uma cópia do arquivo danificado na pasta dos dados."), 400);
   }
