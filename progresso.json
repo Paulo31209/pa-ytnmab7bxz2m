@@ -1,0 +1,393 @@
+{
+ "atualizado": "2026-11-27T20:13:09.858Z",
+ "demandas": [
+  {
+   "num": "0",
+   "icon": "🌐",
+   "title": "Rede dedicada full duplex / IP dedicado (2 a 5 Gbps)",
+   "summary": "Link simétrico com banda garantida e IP fixo para a origem das lives e os servidores.",
+   "status": "todo",
+   "priority": "Crítica",
+   "area": "Infraestrutura",
+   "owner": "",
+   "due": "",
+   "tasks": [
+    {
+     "text": "Medir o consumo de banda atual (pico durante uma live)",
+     "done": false
+    },
+    {
+     "text": "Calcular a banda necessária (bitrate × espectadores × margem de 40%)",
+     "done": false
+    },
+    {
+     "text": "Cotar link dedicado com pelo menos 3 operadoras",
+     "done": false
+    },
+    {
+     "text": "Exigir na proposta: SLA, bloco de IP fixo (/29) e IPv6",
+     "done": false
+    },
+    {
+     "text": "Conferir se roteador, switch e placas de rede suportam 10 GbE (SFP+)",
+     "done": false
+    },
+    {
+     "text": "Contratar 2º link de outra operadora (backup)",
+     "done": false
+    },
+    {
+     "text": "Configurar failover automático entre os dois links",
+     "done": false
+    },
+    {
+     "text": "Teste de aceite com iperf3 (upload e download por 24h)",
+     "done": false
+    }
+   ]
+  },
+  {
+   "num": "1",
+   "icon": "🍎",
+   "title": "Ligar para a Apple e verificar o status da conta",
+   "summary": "Confirmar se a conta Apple Developer está ativa, sem pendências e pronta para publicar.",
+   "status": "todo",
+   "priority": "Alta",
+   "area": "Contas",
+   "owner": "",
+   "due": "",
+   "tasks": [
+    {
+     "text": "Juntar Apple ID, Team ID, CNPJ e número D-U-N-S",
+     "done": false
+    },
+    {
+     "text": "Abrir contato em developer.apple.com/contact e pedir ligação",
+     "done": false
+    },
+    {
+     "text": "Verificar status e data de renovação da assinatura (anual)",
+     "done": false
+    },
+    {
+     "text": "Conferir Agreements, Tax and Banking (aceitar contratos pendentes)",
+     "done": false
+    },
+    {
+     "text": "Confirmar quem é o Account Holder e dar acesso Admin à equipe",
+     "done": false
+    },
+    {
+     "text": "Conferir certificados e perfis de provisionamento vencidos",
+     "done": false
+    },
+    {
+     "text": "Registrar o número do caso e a resposta no Diário",
+     "done": false
+    }
+   ]
+  },
+  {
+   "num": "2",
+   "icon": "🗂️",
+   "title": "Levantamento de tudo que tem nos servidores",
+   "summary": "Inventário completo: máquinas, serviços, portas, domínios, SSL, backups, custos e acessos.",
+   "status": "todo",
+   "priority": "Crítica",
+   "area": "Infraestrutura",
+   "owner": "",
+   "due": "",
+   "tasks": [
+    {
+     "text": "Listar todas as máquinas (cloud, VPS e servidor local)",
+     "done": false
+    },
+    {
+     "text": "Coletar hardware, sistema, IP e forma de acesso de cada uma",
+     "done": false
+    },
+    {
+     "text": "Mapear serviços, portas e containers rodando",
+     "done": false
+    },
+    {
+     "text": "Mapear domínios, onde está o DNS e validade dos certificados SSL",
+     "done": false
+    },
+    {
+     "text": "Mapear backups (onde ficam, frequência, último teste de restauração)",
+     "done": false
+    },
+    {
+     "text": "Mapear custos mensais e vencimento dos contratos",
+     "done": false
+    },
+    {
+     "text": "Guardar as credenciais num cofre de senhas (Bitwarden/Vaultwarden)",
+     "done": false
+    },
+    {
+     "text": "Desenhar o diagrama da arquitetura atual",
+     "done": false
+    }
+   ]
+  },
+  {
+   "num": "3",
+   "icon": "📡",
+   "title": "Servidor local redundante da live com buffer (DVR)",
+   "summary": "Servidor local recebe a live em paralelo, guarda o buffer e o player deixa voltar, adiantar 15 s ou ir AO VIVO.",
+   "status": "todo",
+   "priority": "Alta",
+   "area": "Streaming",
+   "owner": "",
+   "due": "",
+   "tasks": [
+    {
+     "text": "Escolher o software do servidor local (SRS ou MediaMTX)",
+     "done": false
+    },
+    {
+     "text": "Configurar a entrada RTMP/SRT no servidor local",
+     "done": false
+    },
+    {
+     "text": "Configurar o encoder (OBS/vMix) para enviar a 2 destinos ao mesmo tempo",
+     "done": false
+    },
+    {
+     "text": "Configurar HLS com janela de DVR (ex.: 2 horas)",
+     "done": false
+    },
+    {
+     "text": "Player: botões −15 s / +15 s e botão AO VIVO",
+     "done": false
+    },
+    {
+     "text": "Player: ao reconectar, perguntar “continuar de onde parou ou ir ao vivo?”",
+     "done": false
+    },
+    {
+     "text": "Player: troca automática do servidor principal para o local",
+     "done": false
+    },
+    {
+     "text": "Teste: derrubar o servidor principal durante uma live de teste",
+     "done": false
+    },
+    {
+     "text": "Teste: cortar a internet do espectador por 1 min e voltar",
+     "done": false
+    }
+   ]
+  },
+  {
+   "num": "4",
+   "icon": "📱",
+   "title": "Lançar os apps IAVE e META na Google Play e na App Store",
+   "summary": "Publicar os dois aplicativos nas duas lojas, com fichas, políticas e testes prontos.",
+   "status": "todo",
+   "priority": "Alta",
+   "area": "Aplicativos",
+   "owner": "",
+   "due": "",
+   "tasks": [
+    {
+     "text": "Confirmar contas ativas: Play Console (Organização) e Apple Developer",
+     "done": false
+    },
+    {
+     "text": "Publicar política de privacidade e página de exclusão de conta",
+     "done": false
+    },
+    {
+     "text": "Criar conta demo para os revisores das lojas",
+     "done": false
+    },
+    {
+     "text": "IAVE — gerar build Android (AAB) e iOS",
+     "done": false
+    },
+    {
+     "text": "IAVE — preparar ícone, screenshots e textos da loja",
+     "done": false
+    },
+    {
+     "text": "IAVE — teste fechado (Play) e TestFlight (Apple)",
+     "done": false
+    },
+    {
+     "text": "IAVE — enviar para revisão nas duas lojas",
+     "done": false
+    },
+    {
+     "text": "META — gerar build Android (AAB) e iOS",
+     "done": false
+    },
+    {
+     "text": "META — preparar ícone, screenshots e textos da loja",
+     "done": false
+    },
+    {
+     "text": "META — teste fechado (Play) e TestFlight (Apple)",
+     "done": false
+    },
+    {
+     "text": "META — enviar para revisão nas duas lojas",
+     "done": false
+    }
+   ]
+  },
+  {
+   "num": "5",
+   "icon": "🛡️",
+   "title": "Plano de redundância: apps e domínio redundante em máquinas diferentes",
+   "summary": "Se uma máquina, provedor ou domínio cair, outro assume sozinho e os apps continuam funcionando.",
+   "status": "todo",
+   "priority": "Alta",
+   "area": "Infraestrutura",
+   "owner": "",
+   "due": "",
+   "tasks": [
+    {
+     "text": "Definir metas: RTO (tempo para voltar) e RPO (perda máxima de dados)",
+     "done": false
+    },
+    {
+     "text": "Registrar domínio reserva em outro registrador",
+     "done": false
+    },
+    {
+     "text": "Ativar renovação automática e trava de transferência nos domínios",
+     "done": false
+    },
+    {
+     "text": "Subir 2ª máquina em provedor diferente com o mesmo deploy",
+     "done": false
+    },
+    {
+     "text": "DNS com health check e failover automático (TTL 60 s)",
+     "done": false
+    },
+    {
+     "text": "Replicação/backup do banco + teste de restauração",
+     "done": false
+    },
+    {
+     "text": "Apps: lista de endereços reserva via configuração remota",
+     "done": false
+    },
+    {
+     "text": "Escrever o runbook de failover e testar a cada 3 meses",
+     "done": false
+    }
+   ]
+  },
+  {
+   "num": "6",
+   "icon": "🤖",
+   "title": "Adicionar modelos de IA: chat, transcrição, voz e assistente",
+   "summary": "Colocar IA nos apps e serviços: chat inteligente, transcrição e legendas, voz (fala ↔ texto) e um assistente que executa tarefas.",
+   "status": "todo",
+   "priority": "Média",
+   "area": "Inteligência Artificial",
+   "owner": "",
+   "due": "",
+   "tasks": [
+    {
+     "text": "Definir os casos de uso e a prioridade de cada um (chat, transcrição, voz, assistente)",
+     "done": false
+    },
+    {
+     "text": "Criar as contas e chaves de API e guardar no cofre de senhas",
+     "done": false
+    },
+    {
+     "text": "Montar o “gateway de IA” no servidor (as chaves NUNCA ficam dentro do app)",
+     "done": false
+    },
+    {
+     "text": "Chat: integrar o modelo de linguagem com resposta em tempo real (streaming)",
+     "done": false
+    },
+    {
+     "text": "Transcrição: legendas automáticas da live e transcrição de áudios/vídeos",
+     "done": false
+    },
+    {
+     "text": "Voz: texto → fala (TTS) e fala → texto no app",
+     "done": false
+    },
+    {
+     "text": "Assistente: base de conhecimento (FAQ/documentos) + ações (ferramentas)",
+     "done": false
+    },
+    {
+     "text": "Assistente no WhatsApp para atendimento",
+     "done": false
+    },
+    {
+     "text": "Limites de custo por usuário/dia e alerta de gasto (ligar à demanda 8)",
+     "done": false
+    },
+    {
+     "text": "LGPD: avisar o uso de IA e de gravação de voz na política de privacidade",
+     "done": false
+    },
+    {
+     "text": "Teste piloto com usuários reais e medir qualidade × custo",
+     "done": false
+    }
+   ]
+  },
+  {
+   "num": "8",
+   "icon": "🚨",
+   "title": "Automação de contingência, alarmes e alertas no WhatsApp",
+   "summary": "Monitorar servidores e serviços, corrigir sozinho o que der e avisar nos grupos de WhatsApp.",
+   "status": "todo",
+   "priority": "Crítica",
+   "area": "Monitoramento",
+   "owner": "",
+   "due": "",
+   "tasks": [
+    {
+     "text": "Instalar o Uptime Kuma numa máquina FORA da infraestrutura monitorada",
+     "done": false
+    },
+    {
+     "text": "Cadastrar checagens de sites, APIs, live e portas",
+     "done": false
+    },
+    {
+     "text": "Instalar Netdata ou Prometheus para CPU, RAM e disco",
+     "done": false
+    },
+    {
+     "text": "Configurar gateway de WhatsApp com chip dedicado",
+     "done": false
+    },
+    {
+     "text": "Criar grupos: Críticos, Avisos e Relatório diário",
+     "done": false
+    },
+    {
+     "text": "Mensagem de RESOLVIDO e escalonamento por ligação",
+     "done": false
+    },
+    {
+     "text": "Auto-recuperação: reinício automático de serviços e containers",
+     "done": false
+    },
+    {
+     "text": "Escrever runbook para cada alerta crítico",
+     "done": false
+    },
+    {
+     "text": "Teste: derrubar um serviço e conferir o alerta em menos de 2 min",
+     "done": false
+    }
+   ]
+  }
+ ]
+}
