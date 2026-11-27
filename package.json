@@ -1,7 +1,7 @@
 {
   "name": "plano-de-acao",
   "productName": "Plano de Ação",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Plano de ação estilo Notion: demandas, checklists, inventário de servidores e diário. Dados salvos em Documentos\\Plano de Ação.",
   "author": "Plano de Ação",
   "main": "main.js",

@@ -192,7 +192,7 @@
 
   function cardHtml(d) {
     const p = prog(d);
-    return `<a class="dcard" href="#/d/${d.id}" draggable="true" data-card="${d.id}">
+    return `<a class="dcard" href="#/d/${d.id}" draggable="false" data-card="${d.id}">
       <div class="top"><span class="ico">${esc(d.icon)}</span><span class="num-tag">${esc(d.num)}</span>${d.area ? `<span class="eyebrow">${esc(d.area)}</span>` : ""}</div>
       <h3>${esc(d.title)}</h3>
       <p>${esc(d.summary)}</p>
@@ -209,8 +209,8 @@
       <h1 class="hero-h">Quadro</h1>
       <p class="hero-p">Arraste os cartões entre as colunas para mudar o status.</p>
       <div class="board">${STATUS.map((s) => { const ds = sorted().filter((d) => d.status === s.id); return `
-        <div class="col" data-col="${s.id}">
-          <div class="col-h"><span class="badge ${s.badge}">${esc(s.label)}</span><span class="count">${ds.length}</span></div>
+        <div class="kcol" data-col="${s.id}">
+          <div class="kcol-h"><span class="badge ${s.badge}">${esc(s.label)}</span><span class="count">${ds.length}</span></div>
           ${ds.map(cardHtml).join("")}
         </div>`; }).join("")}
       </div>`;
@@ -454,12 +454,49 @@
     save(); viewDiario();
   });
 
-  // Kanban: arrastar e soltar
-  let dragId = null;
-  main.addEventListener("dragstart", (e) => { const c = e.target.closest?.("[data-card]"); if (!c || route().name !== "quadro") return; dragId = c.dataset.card; c.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", dragId); });
-  main.addEventListener("dragend", (e) => { e.target.closest?.("[data-card]")?.classList.remove("dragging"); main.querySelectorAll(".col.over").forEach((c) => c.classList.remove("over")); });
-  main.addEventListener("dragover", (e) => { const col = e.target.closest(".col"); if (!col || !dragId) return; e.preventDefault(); main.querySelectorAll(".col.over").forEach((c) => c !== col && c.classList.remove("over")); col.classList.add("over"); });
-  main.addEventListener("drop", (e) => { const col = e.target.closest(".col"); if (!col || !dragId) return; e.preventDefault(); const d = byId(dragId); dragId = null; if (d) { d.status = col.dataset.col; save(); viewQuadro(); renderSide(); } });
+  // Kanban: arrastar e soltar com eventos de ponteiro (mouse e toque).
+  // O "draggable" nativo do navegador bloqueava o clique nos cartões dentro do app.
+  let drag = null, skipClick = false;
+  const colAt = (x, y) => document.elementFromPoint(x, y)?.closest(".kcol");
+  main.addEventListener("pointerdown", (e) => {
+    const card = e.target.closest(".kcol .dcard");
+    if (!card || e.button !== 0 || route().name !== "quadro") return;
+    drag = { card, id: card.dataset.card, x: e.clientX, y: e.clientY, on: false, ghost: null, pid: e.pointerId };
+  });
+  document.addEventListener("pointermove", (e) => {
+    if (!drag || e.pointerId !== drag.pid) return;
+    if (!drag.on) {
+      if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 6) return; // ainda é um clique
+      drag.on = true;
+      const r = drag.card.getBoundingClientRect();
+      drag.dx = drag.x - r.left; drag.dy = drag.y - r.top;
+      drag.ghost = drag.card.cloneNode(true);
+      Object.assign(drag.ghost.style, { position: "fixed", width: r.width + "px", left: r.left + "px", top: r.top + "px", pointerEvents: "none", zIndex: 9999, opacity: ".92", rotate: "1.5deg", boxShadow: "var(--shadow-lg)" });
+      document.body.append(drag.ghost);
+      drag.card.classList.add("dragging");
+      document.body.classList.add("is-dragging");
+    }
+    e.preventDefault();
+    drag.ghost.style.left = e.clientX - drag.dx + "px";
+    drag.ghost.style.top = e.clientY - drag.dy + "px";
+    const col = colAt(e.clientX, e.clientY);
+    main.querySelectorAll(".kcol.over").forEach((c) => c !== col && c.classList.remove("over"));
+    col?.classList.add("over");
+  });
+  const endDrag = (e, cancel) => {
+    if (!drag || e.pointerId !== drag.pid) return;
+    const d = drag; drag = null;
+    if (!d.on) return; // foi só um clique: o link abre normalmente
+    skipClick = true; setTimeout(() => (skipClick = false), 0);
+    d.ghost.remove(); d.card.classList.remove("dragging"); document.body.classList.remove("is-dragging");
+    main.querySelectorAll(".kcol.over").forEach((c) => c.classList.remove("over"));
+    const col = !cancel && colAt(e.clientX, e.clientY), dem = byId(d.id);
+    if (col && dem && dem.status !== col.dataset.col) { dem.status = col.dataset.col; save(); }
+    viewQuadro(); renderSide();
+  };
+  document.addEventListener("pointerup", (e) => endDrag(e, false));
+  document.addEventListener("pointercancel", (e) => endDrag(e, true));
+  document.addEventListener("click", (e) => { if (skipClick && e.target.closest(".dcard")) { e.preventDefault(); e.stopPropagation(); } }, true);
 
   // Importar backup
   $("#importFile").addEventListener("change", async (e) => {
