@@ -1,0 +1,210 @@
+/* ==========================================================================
+   DESIGN SYSTEM 2027 — effects.css
+   Regra de ouro: no máximo 1 efeito protagonista por tela. Os demais são
+   discretos (grain, edge, sombra). Todos respeitam prefers-reduced-motion
+   (via base.css) e têm fallback sem suporte.
+   ========================================================================== */
+
+@property --fx-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@layer effects {
+
+  /* ---------- Vidro (glass / "liquid glass") ---------- */
+  .fx-glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(var(--blur-md)) saturate(1.6);
+    -webkit-backdrop-filter: blur(var(--blur-md)) saturate(1.6);
+    box-shadow: var(--shadow-lg), var(--shadow-edge);
+  }
+  .fx-glass-strong {
+    background: color-mix(in oklch, var(--card) 45%, transparent);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(var(--blur-lg)) saturate(1.8) brightness(1.05);
+    -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(1.8) brightness(1.05);
+    box-shadow: var(--shadow-xl), inset 0 1px 0 var(--edge-light), inset 0 -1px 0 oklch(0 0 0 / 0.05);
+  }
+  @supports not (backdrop-filter: blur(1px)) {
+    .fx-glass, .fx-glass-strong { background: var(--popover); }
+  }
+
+  /* ---------- Granulado (textura de filme) ----------
+     Aplica sobre qualquer fundo; não captura cliques. */
+  .fx-grain { position: relative; isolation: isolate; }
+  .fx-grain::after {
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    border-radius: inherit;
+    opacity: var(--grain-opacity, 0.07);
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  [data-mode="dark"] .fx-grain::after, .dark .fx-grain::after { --grain-opacity: 0.12; mix-blend-mode: soft-light; }
+
+  /* ---------- Malha de gradiente (mesh) estática ---------- */
+  .fx-mesh {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(at 12% 18%, color-mix(in oklch, var(--primary) 28%, transparent) 0, transparent 50%),
+      radial-gradient(at 88% 12%, color-mix(in oklch, var(--highlight) 30%, transparent) 0, transparent 45%),
+      radial-gradient(at 70% 88%, color-mix(in oklch, var(--chart-3) 22%, transparent) 0, transparent 50%),
+      radial-gradient(at 20% 90%, color-mix(in oklch, var(--highlight) 16%, transparent) 0, transparent 45%);
+  }
+
+  /* ---------- Aurora animada (bolhas desfocadas) ----------
+     <div class="fx-aurora"> conteúdo </div> */
+  .fx-aurora { position: relative; isolation: isolate; overflow: hidden; }
+  .fx-aurora::before {
+    content: ""; position: absolute; inset: -30%; z-index: -1;
+    background:
+      radial-gradient(closest-side at 30% 40%, color-mix(in oklch, var(--primary) 55%, transparent), transparent),
+      radial-gradient(closest-side at 70% 35%, color-mix(in oklch, var(--highlight) 55%, transparent), transparent),
+      radial-gradient(closest-side at 50% 75%, color-mix(in oklch, var(--chart-3) 40%, transparent), transparent);
+    filter: blur(var(--blur-xl));
+    opacity: var(--aurora-opacity, 0.55);
+    animation: fx-aurora 18s var(--ease-in-out) infinite alternate;
+  }
+  @keyframes fx-aurora {
+    0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+    50%  { transform: translate(4%, -3%) rotate(12deg) scale(1.08); }
+    100% { transform: translate(-4%, 3%) rotate(-8deg) scale(0.96); }
+  }
+
+  /* ---------- Brilho colorido (glow) ---------- */
+  .fx-glow { box-shadow: var(--shadow-glow); }
+  .fx-glow-hover { transition: box-shadow var(--dur-base) var(--ease-out); }
+  .fx-glow-hover:hover { box-shadow: var(--shadow-glow); }
+
+  /* ---------- Texto em gradiente ---------- */
+  .fx-text-gradient {
+    background: var(--gradient-text);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  }
+
+  /* ---------- Borda em gradiente (estática) ---------- */
+  .fx-border-gradient {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--card), var(--card)) padding-box,
+      var(--gradient-brand) border-box;
+  }
+
+  /* ---------- Feixe de luz girando na borda (border beam) ---------- */
+  .fx-border-beam {
+    --beam-w: 1.5px;
+    border: var(--beam-w) solid transparent;
+    background:
+      linear-gradient(var(--card), var(--card)) padding-box,
+      conic-gradient(from var(--fx-angle), transparent 0 70%, var(--highlight) 80%, var(--primary) 88%, transparent 96%) border-box,
+      linear-gradient(var(--border), var(--border)) border-box;
+    animation: fx-spin 4s linear infinite;
+  }
+  @keyframes fx-spin { to { --fx-angle: 360deg; } }
+
+  /* ---------- Spotlight que segue o cursor ----------
+     Precisa de 3 linhas de JS (ver references/efeitos.md) que definem --mx/--my. */
+  .fx-spotlight { position: relative; isolation: isolate; }
+  .fx-spotlight::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(28rem circle at var(--mx, 50%) var(--my, -20%), color-mix(in oklch, var(--primary) 14%, transparent), transparent 60%);
+    opacity: 0; transition: opacity var(--dur-slow) var(--ease-out);
+  }
+  .fx-spotlight:hover::before { opacity: 1; }
+
+  /* ---------- Padrões de fundo ---------- */
+  .fx-dots {
+    background-image: radial-gradient(color-mix(in oklch, var(--foreground) 14%, transparent) 1px, transparent 1px);
+    background-size: var(--pattern-size, 20px) var(--pattern-size, 20px);
+  }
+  .fx-gridlines {
+    background-image:
+      linear-gradient(color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px);
+    background-size: var(--pattern-size, 48px) var(--pattern-size, 48px);
+  }
+  /* Esmaece as bordas de qualquer elemento (ótimo com fx-dots / fx-gridlines) */
+  .fx-fade-edges { mask-image: radial-gradient(ellipse at center, #000 40%, transparent 75%); }
+  .fx-fade-bottom { mask-image: linear-gradient(#000 60%, transparent); }
+  .fx-fade-x { mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+
+  /* ---------- Brilho passando (shimmer) em botões/badges ---------- */
+  .fx-shimmer { position: relative; overflow: hidden; }
+  .fx-shimmer::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(110deg, transparent 35%, oklch(1 0 0 / 0.35) 50%, transparent 65%);
+    translate: -100% 0;
+    animation: fx-shimmer 3.2s var(--ease-in-out) infinite;
+  }
+  @keyframes fx-shimmer { 60%, 100% { translate: 100% 0; } }
+
+  /* ---------- Elevação ao passar o mouse ---------- */
+  .fx-lift { transition: translate var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out); }
+  .fx-lift:hover { translate: 0 -3px; box-shadow: var(--shadow-lg); }
+  .fx-press { transition: scale var(--dur-fast) var(--ease-standard); }
+  .fx-press:active { scale: 0.97; }
+
+  /* ---------- Revelação ao rolar (scroll-driven, sem JS) ----------
+     Sem suporte: o elemento simplesmente aparece. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .fx-reveal {
+        animation: fx-reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 60%;
+      }
+      @keyframes fx-reveal { from { opacity: 0; translate: 0 1.5rem; } }
+
+      /* Barra de progresso de leitura: <div class="fx-scroll-progress"></div> */
+      .fx-scroll-progress {
+        position: fixed; inset-block-start: 0; inset-inline: 0; z-index: var(--z-toast);
+        block-size: 3px; background: var(--gradient-brand);
+        transform-origin: 0 50%;
+        animation: fx-grow linear both;
+        animation-timeline: scroll(root);
+      }
+      @keyframes fx-grow { from { scale: 0 1; } }
+
+      /* Header que ganha fundo e sombra depois de rolar */
+      .fx-header-scroll {
+        animation: fx-header linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 120px;
+      }
+      @keyframes fx-header {
+        to { background: color-mix(in oklch, var(--background) 80%, transparent); box-shadow: 0 1px 0 var(--border); backdrop-filter: blur(var(--blur-md)); }
+      }
+    }
+  }
+
+  /* ---------- Entrada em cascata (stagger) ----------
+     <ul class="fx-stagger"> filhos entram um após o outro. Use 1x por tela. */
+  @media (prefers-reduced-motion: no-preference) {
+    .fx-stagger > * {
+      animation: fx-rise var(--dur-slower) var(--ease-out) both;
+      animation-delay: calc(sibling-index() * 60ms);
+    }
+    @supports not (animation-delay: calc(sibling-index() * 1ms)) {
+      .fx-stagger > :nth-child(1) { animation-delay: 0ms; }
+      .fx-stagger > :nth-child(2) { animation-delay: 60ms; }
+      .fx-stagger > :nth-child(3) { animation-delay: 120ms; }
+      .fx-stagger > :nth-child(4) { animation-delay: 180ms; }
+      .fx-stagger > :nth-child(5) { animation-delay: 240ms; }
+      .fx-stagger > :nth-child(6) { animation-delay: 300ms; }
+      .fx-stagger > :nth-child(n+7) { animation-delay: 360ms; }
+    }
+    @keyframes fx-rise { from { opacity: 0; translate: 0 0.75rem; } }
+  }
+
+  /* ---------- Transições entre páginas (View Transitions) ----------
+     Sites com várias páginas: navegação ganha crossfade nativo
+     (regra @view-transition no fim do arquivo). */
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--dur-slow); animation-timing-function: var(--ease-out); }
+  .vt-hero { view-transition-name: hero; }
+}
+
+@view-transition { navigation: auto; }

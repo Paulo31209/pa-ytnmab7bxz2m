@@ -1,0 +1,212 @@
+<title>Andamento do Plano de Ação</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
+<style>
+  /* Layout: uma coluna de leitura; resumo do progresso no topo, depois uma linha por demanda. */
+  :root {
+    --bg: #f4f6fb; --surface: #ffffff; --sunken: #eef2f9;
+    --fg: #101828; --muted: #5a6478; --faint: #8a93a6; --line: #dfe4ee;
+    --accent: #2457d6; --accent-soft: #e4ecff;
+    --ok: #157347; --ok-soft: #e1f4ea;
+    --doing: #1f55c9; --doing-soft: #e3ebff;
+    --warn: #a35a06; --warn-soft: #fdf0dc;
+    --crit: #b4231f; --crit-soft: #fde6e4;
+    --font: "Geist", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+    --mono: "Geist Mono", ui-monospace, "Cascadia Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d1118; --surface: #151b25; --sunken: #111722;
+      --fg: #e8ecf4; --muted: #a2acbf; --faint: #737e93; --line: #263042;
+      --accent: #7aa2ff; --accent-soft: #1b2a4d;
+      --ok: #5fd39a; --ok-soft: #12301f;
+      --doing: #8eb0ff; --doing-soft: #1a2747;
+      --warn: #f0b25c; --warn-soft: #3a2a12;
+      --crit: #ff8f88; --crit-soft: #3d1a19;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1118; --surface: #151b25; --sunken: #111722;
+    --fg: #e8ecf4; --muted: #a2acbf; --faint: #737e93; --line: #263042;
+    --accent: #7aa2ff; --accent-soft: #1b2a4d;
+    --ok: #5fd39a; --ok-soft: #12301f;
+    --doing: #8eb0ff; --doing-soft: #1a2747;
+    --warn: #f0b25c; --warn-soft: #3a2a12;
+    --crit: #ff8f88; --crit-soft: #3d1a19;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font);
+    font-size: 15px; line-height: 1.55;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page { max-width: 54rem; margin: 0 auto; padding-block: 2.5rem 4rem; display: grid; gap: 2rem; }
+
+  header { display: grid; gap: .35rem; }
+  .eyebrow { font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  h1 { margin: 0; font-size: clamp(1.9rem, 1.4rem + 2vw, 2.6rem); line-height: 1.1; letter-spacing: -.02em; text-wrap: balance; }
+  .updated { color: var(--muted); font-size: .92rem; }
+
+  /* Resumo */
+  .summary { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1.5rem; display: grid; gap: 1.25rem; }
+  .big { display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap; }
+  .big strong { font-size: 3rem; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .big span { color: var(--muted); }
+  .bar { height: 10px; border-radius: 99px; background: var(--sunken); overflow: hidden; }
+  .bar > i { display: block; height: 100%; width: var(--v, 0%); background: var(--accent); border-radius: inherit; transition: width .6s ease; }
+  .bar.done > i { background: var(--ok); }
+  .counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: .75rem; }
+  .count { background: var(--sunken); border-radius: 10px; padding: .7rem .85rem; }
+  .count b { display: block; font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+  .count small { color: var(--muted); font-size: .8rem; }
+
+  /* Filtros */
+  .filters { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .chip { font: inherit; font-size: .88rem; border: 1px solid var(--line); background: var(--surface); color: var(--muted); padding: .38rem .85rem; border-radius: 99px; cursor: pointer; }
+  .chip:hover { color: var(--fg); border-color: var(--faint); }
+  .chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .chip:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Demandas */
+  .list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .item { padding: 1.25rem 1.5rem; display: grid; gap: .7rem; border-top: 1px solid var(--line); }
+  .item:first-child { border-top: 0; }
+  .head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: .2rem .8rem; align-items: start; }
+  .num { font-family: var(--mono); font-size: .8rem; color: var(--accent); background: var(--accent-soft); border-radius: 6px; padding: .12rem .45rem; margin-top: .2rem; }
+  .title { margin: 0; font-size: 1.05rem; font-weight: 600; line-height: 1.35; min-width: 0; }
+  .sub { grid-column: 2 / -1; color: var(--muted); font-size: .9rem; margin: 0; }
+  .pill { font-size: .78rem; font-weight: 600; padding: .2rem .6rem; border-radius: 99px; white-space: nowrap; display: inline-flex; align-items: center; gap: .35rem; }
+  .pill::before { content: ""; width: .45rem; height: .45rem; border-radius: 50%; background: currentColor; }
+  .s-todo { background: var(--sunken); color: var(--muted); }
+  .s-doing { background: var(--doing-soft); color: var(--doing); }
+  .s-blocked { background: var(--warn-soft); color: var(--warn); }
+  .s-done { background: var(--ok-soft); color: var(--ok); }
+  .meta { display: flex; flex-wrap: wrap; gap: .35rem 1rem; font-size: .84rem; color: var(--muted); padding-left: calc(2.1rem + .8rem); }
+  .meta .p-Crítica { color: var(--crit); font-weight: 600; }
+  .meta .p-Alta { color: var(--warn); font-weight: 600; }
+  .prog { display: flex; align-items: center; gap: .75rem; padding-left: calc(2.1rem + .8rem); }
+  .prog .bar { flex: 1; height: 6px; }
+  .prog span { font-size: .84rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .tasks { padding-left: calc(2.1rem + .8rem); }
+  details summary { cursor: pointer; font-size: .86rem; color: var(--accent); font-weight: 500; list-style: none; display: inline-flex; gap: .35rem; align-items: center; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸"; transition: transform .15s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  .tl { list-style: none; margin: .6rem 0 0; padding: 0; display: grid; gap: .3rem; }
+  .tl li { display: grid; grid-template-columns: 1.3rem minmax(0, 1fr); gap: .4rem; font-size: .9rem; }
+  .tl li .mk { width: 1.05rem; height: 1.05rem; border-radius: 4px; border: 1.5px solid var(--faint); margin-top: .18rem; display: grid; place-items: center; font-size: .7rem; line-height: 1; }
+  .tl li.ok { color: var(--muted); }
+  .tl li.ok .mk { background: var(--ok); border-color: var(--ok); color: var(--surface); }
+  .tl li.ok .tx { text-decoration: line-through; text-decoration-color: var(--faint); }
+  .donelist { display: grid; gap: .3rem; }
+  .donelist .lbl { font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--ok); }
+
+  .empty, .error { text-align: center; color: var(--muted); padding: 2rem 1rem; }
+  footer { color: var(--faint); font-size: .82rem; text-align: center; }
+
+  @media (max-width: 560px) {
+    .head { grid-template-columns: auto minmax(0, 1fr); }
+    .head .pill { grid-column: 2; justify-self: start; }
+    .meta, .prog, .tasks { padding-left: 0; }
+    .item { padding: 1.1rem 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .bar > i, details summary::before { transition: none; } }
+</style>
+
+<main class="page">
+  <header>
+    <div class="eyebrow">Acompanhamento</div>
+    <h1>Plano de Ação</h1>
+    <div class="updated" id="updated">Carregando o andamento…</div>
+  </header>
+
+  <section class="summary" id="summary" aria-label="Resumo do progresso">
+    <div class="big"><strong id="pct">–</strong><span id="pctTxt">das tarefas concluídas</span></div>
+    <div class="bar" id="mainBar"><i></i></div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <div class="filters" role="group" aria-label="Filtrar demandas">
+    <button class="chip" id="f-all" data-f="all" aria-pressed="true">Todas</button>
+    <button class="chip" id="f-doing" data-f="doing" aria-pressed="false">Em andamento</button>
+    <button class="chip" id="f-done" data-f="done" aria-pressed="false">Concluídas</button>
+    <button class="chip" id="f-todo" data-f="todo" aria-pressed="false">A fazer</button>
+    <button class="chip" id="f-blocked" data-f="blocked" aria-pressed="false">Bloqueadas</button>
+  </div>
+
+  <ul class="list" id="list"><li class="empty">Carregando…</li></ul>
+
+  <footer>Página só de leitura, gerada a partir do app Plano de Ação. Anotações, inventário e diário não são publicados.</footer>
+</main>
+
+<script>
+(function () {
+  const STATUS = { todo: "A fazer", doing: "Em andamento", blocked: "Bloqueado", done: "Concluído" };
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmtDate = (iso) => { if (!iso) return ""; const [y, m, d] = iso.slice(0, 10).split("-"); return `${d}/${m}/${y}`; };
+  const fmtWhen = (iso) => { const d = new Date(iso); if (isNaN(d)) return ""; return d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }); };
+  let data = null, filter = "all";
+
+  function render() {
+    const ds = data.demandas;
+    const all = ds.flatMap((d) => d.tasks), feitas = all.filter((t) => t.done).length;
+    const pct = all.length ? Math.round((feitas / all.length) * 100) : 0;
+    document.getElementById("updated").textContent = "Atualizado em " + fmtWhen(data.atualizado);
+    document.getElementById("pct").textContent = pct + "%";
+    document.getElementById("pctTxt").textContent = `das tarefas concluídas · ${feitas} de ${all.length}`;
+    const mb = document.getElementById("mainBar"); mb.style.setProperty("--v", pct + "%"); mb.classList.toggle("done", pct === 100);
+    const n = (s) => ds.filter((d) => d.status === s).length;
+    document.getElementById("counts").innerHTML = [
+      [ds.length, "demandas no plano"], [n("done"), "concluídas"], [n("doing"), "em andamento"], [n("blocked"), "bloqueadas"],
+    ].map(([v, l]) => `<div class="count"><b>${v}</b><small>${l}</small></div>`).join("");
+
+    const shown = ds.filter((d) => filter === "all" || d.status === filter);
+    document.getElementById("list").innerHTML = shown.length ? shown.map((d) => {
+      const k = d.tasks.filter((t) => t.done).length, t = d.tasks.length, p = t ? Math.round((k / t) * 100) : 0;
+      const done = d.tasks.filter((x) => x.done);
+      const meta = [
+        d.priority ? `<span class="p-${esc(d.priority)}">Prioridade ${esc(d.priority).toLowerCase()}</span>` : "",
+        d.area ? `<span>${esc(d.area)}</span>` : "",
+        d.owner ? `<span>Responsável: ${esc(d.owner)}</span>` : "",
+        d.due ? `<span>Prazo: ${fmtDate(d.due)}</span>` : "",
+      ].filter(Boolean).join("");
+      return `<li class="item">
+        <div class="head">
+          <span class="num">${esc(d.num)}</span>
+          <h2 class="title">${esc(d.icon)} ${esc(d.title)}</h2>
+          <span class="pill s-${esc(d.status)}">${STATUS[d.status] || esc(d.status)}</span>
+          ${d.summary ? `<p class="sub">${esc(d.summary)}</p>` : ""}
+        </div>
+        ${meta ? `<div class="meta">${meta}</div>` : ""}
+        <div class="prog"><div class="bar ${p === 100 ? "done" : ""}" style="--v:${p}%"><i></i></div><span>${k} de ${t} · ${p}%</span></div>
+        <div class="tasks">
+          ${done.length ? `<div class="donelist"><span class="lbl">Já feito</span><ul class="tl">${done.map((x) => `<li class="ok"><span class="mk">✓</span><span class="tx">${esc(x.text)}</span></li>`).join("")}</ul></div>` : ""}
+          ${t ? `<details><summary>Ver todas as ${t} tarefas</summary><ul class="tl">${d.tasks.map((x) => `<li class="${x.done ? "ok" : ""}"><span class="mk">${x.done ? "✓" : ""}</span><span class="tx">${esc(x.text)}</span></li>`).join("")}</ul></details>` : ""}
+        </div>
+      </li>`;
+    }).join("") : `<li class="empty">Nenhuma demanda com esse status.</li>`;
+  }
+
+  document.querySelector(".filters").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-f]"); if (!b || !data) return;
+    filter = b.dataset.f;
+    document.querySelectorAll("[data-f]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    render();
+  });
+
+  fetch("progresso.json", { cache: "no-store" })
+    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then((j) => { data = j; render(); })
+    .catch(() => {
+      document.getElementById("updated").textContent = "Não foi possível carregar o andamento.";
+      document.getElementById("list").innerHTML = `<li class="error">Os dados do plano não carregaram. Recarregue a página em alguns segundos.</li>`;
+    });
+})();
+</script>

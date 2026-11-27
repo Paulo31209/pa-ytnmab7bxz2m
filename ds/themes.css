@@ -1,0 +1,96 @@
+/* ==========================================================================
+   DESIGN SYSTEM 2027 — themes.css
+   Uso: <html data-theme="atlantico" data-mode="dark">
+   Também funciona em trechos: <section data-theme="ipe">...</section>
+
+   Cada tema define só parâmetros. Todos foram checados com scripts/contrast.py:
+   texto/fundo ≥ 7:1, texto secundário ≥ 4.5:1, primária como link ≥ 4.5:1,
+   texto sobre primária ≥ 4.5:1 — nos modos claro e escuro.
+
+   Para criar um tema novo, copie um bloco, troque matizes (h) e croma (c)
+   e rode a checagem descrita em references/paletas.md.
+   ========================================================================== */
+
+@layer tokens {
+
+  /* GRAFITE — neutro, tinta quase preta + azul elétrico de destaque.
+     Painéis, ferramentas internas, B2B sério. (padrão) */
+  [data-theme="grafite"] {
+    --ds-neutral-h: 265; --ds-neutral-c: 0.006;
+    --ds-primary-h: 265; --ds-primary-c: 0.012; --ds-primary-l: 0.24; --ds-primary-l-dark: 0.93;
+    --ds-highlight-h: 255; --ds-highlight-c: 0.19; --ds-highlight-l: 0.55; --ds-highlight-l-dark: 0.72;
+    --ds-primary-on: light-dark(oklch(0.99 0 0), oklch(0.18 0.02 265));
+    --ds-highlight-on: light-dark(oklch(0.99 0 0), oklch(0.18 0.02 255));
+    --ds-chart-h: 255;
+  }
+
+  /* ATLÂNTICO — azul cobalto + turquesa. Confiável, fintech, saúde, SaaS. */
+  [data-theme="atlantico"] {
+    --ds-neutral-h: 250; --ds-neutral-c: 0.012;
+    --ds-primary-h: 258; --ds-primary-c: 0.19; --ds-primary-l: 0.52; --ds-primary-l-dark: 0.72;
+    --ds-highlight-h: 195; --ds-highlight-c: 0.12; --ds-highlight-l: 0.62; --ds-highlight-l-dark: 0.78;
+    --ds-primary-on: light-dark(oklch(0.99 0 0), oklch(0.18 0.02 258));
+    --ds-highlight-on: oklch(0.18 0.02 195);
+    --ds-chart-h: 258;
+  }
+
+  /* MARÉ — verde-água profundo + coral rosado. Atendimento, comunicação, bem-estar. */
+  [data-theme="mare"] {
+    --ds-neutral-h: 210; --ds-neutral-c: 0.012;
+    --ds-primary-h: 196; --ds-primary-c: 0.11; --ds-primary-l: 0.5; --ds-primary-l-dark: 0.76;
+    --ds-highlight-h: 12; --ds-highlight-c: 0.16; --ds-highlight-l: 0.64; --ds-highlight-l-dark: 0.74;
+    --ds-primary-on: light-dark(oklch(0.99 0 0), oklch(0.18 0.02 196));
+    --ds-highlight-on: oklch(0.18 0.02 12);
+    --ds-chart-h: 196;
+  }
+
+  /* MATA — esmeralda + dourado. Sustentabilidade, agro, finanças pessoais. */
+  [data-theme="mata"] {
+    --ds-neutral-h: 160; --ds-neutral-c: 0.01;
+    --ds-primary-h: 158; --ds-primary-c: 0.13; --ds-primary-l: 0.5; --ds-primary-l-dark: 0.74;
+    --ds-highlight-h: 88; --ds-highlight-c: 0.15; --ds-highlight-l: 0.78; --ds-highlight-l-dark: 0.82;
+    --ds-primary-on: light-dark(oklch(0.99 0 0), oklch(0.18 0.02 158));
+    --ds-highlight-on: oklch(0.18 0.02 88);
+    --ds-chart-h: 158;
+  }
+
+  /* CERRADO — oliva + ocre, neutros quentes. Artesanal, gastronomia, educação. */
+  [data-theme="cerrado"] {
+    --ds-neutral-h: 90; --ds-neutral-c: 0.012;
+    --ds-primary-h: 125; --ds-primary-c: 0.1; --ds-primary-l: 0.48; --ds-primary-l-dark: 0.76;
+    --ds-highlight-h: 70; --ds-highlight-c: 0.14; --ds-highlight-l: 0.72; --ds-highlight-l-dark: 0.78;
+    --ds-primary-on: light-dark(oklch(0.99 0 0), oklch(0.18 0.02 125));
+    --ds-highlight-on: oklch(0.18 0.02 70);
+    --ds-chart-h: 125;
+  }
+
+  /* IPÊ — roxo-magenta + amarelo-ipê. Criativo, eventos, produtos jovens. */
+  [data-theme="ipe"] {
+    --ds-neutral-h: 315; --ds-neutral-c: 0.012;
+    --ds-primary-h: 318; --ds-primary-c: 0.19; --ds-primary-l: 0.52; --ds-primary-l-dark: 0.74;
+    --ds-highlight-h: 88; --ds-highlight-c: 0.16; --ds-highlight-l: 0.82; --ds-highlight-l-dark: 0.84;
+    --ds-primary-on: light-dark(oklch(0.99 0 0), oklch(0.18 0.02 318));
+    --ds-highlight-on: oklch(0.18 0.02 88);
+    --ds-chart-h: 318;
+  }
+
+  /* JABUTICABA — vinho profundo + ouro rosé. Premium, moda, jurídico, luxo. */
+  [data-theme="jabuticaba"] {
+    --ds-neutral-h: 350; --ds-neutral-c: 0.014;
+    --ds-primary-h: 355; --ds-primary-c: 0.13; --ds-primary-l: 0.42; --ds-primary-l-dark: 0.76;
+    --ds-highlight-h: 55; --ds-highlight-c: 0.06; --ds-highlight-l: 0.76; --ds-highlight-l-dark: 0.8;
+    --ds-primary-on: light-dark(oklch(0.99 0 0), oklch(0.18 0.02 355));
+    --ds-highlight-on: oklch(0.18 0.02 55);
+    --ds-chart-h: 355;
+  }
+
+  /* AURORA — violeta-índigo + ciano. IA, tecnologia, lançamentos; ótimo no escuro. */
+  [data-theme="aurora"] {
+    --ds-neutral-h: 280; --ds-neutral-c: 0.018;
+    --ds-primary-h: 282; --ds-primary-c: 0.21; --ds-primary-l: 0.52; --ds-primary-l-dark: 0.74;
+    --ds-highlight-h: 200; --ds-highlight-c: 0.13; --ds-highlight-l: 0.74; --ds-highlight-l-dark: 0.8;
+    --ds-primary-on: light-dark(oklch(0.99 0 0), oklch(0.18 0.02 282));
+    --ds-highlight-on: oklch(0.18 0.02 200);
+    --ds-chart-h: 282;
+  }
+}

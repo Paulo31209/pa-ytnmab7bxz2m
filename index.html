@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="atlantico" data-font="geist" data-radius="default">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plano de Ação</title>
+  <script src="ds/theme-init.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap">
+  <link rel="stylesheet" href="ds/ds.css">
+  <link rel="stylesheet" href="app.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+</head>
+<body>
+  <div class="shell" id="shell">
+    <aside class="side" id="side" aria-label="Navegação">
+      <div class="side-brand">
+        <span class="brand-mark">📋</span>
+        <div>
+          <strong>Plano de Ação</strong>
+          <small id="brandSub">Infra · Live · Apps</small>
+        </div>
+      </div>
+
+      <label class="search">
+        <span aria-hidden="true">⌕</span>
+        <input id="search" type="search" placeholder="Buscar…" autocomplete="off">
+        <kbd class="kbd">Ctrl K</kbd>
+      </label>
+
+      <nav class="side-nav" id="sideNav"></nav>
+
+      <div class="side-foot">
+        <button class="btn btn-ghost btn-sm" data-action="toggle-mode" title="Claro / escuro">◐ Tema</button>
+        <button class="btn btn-ghost btn-sm" data-action="export" title="Baixar backup .json">⤓ Backup</button>
+        <button class="btn btn-ghost btn-sm" data-action="import" title="Carregar backup .json">⤒ Importar</button>
+        <button class="btn btn-ghost btn-sm" data-action="reset" title="Voltar ao plano original">↺ Restaurar</button>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+      </div>
+    </aside>
+    <div class="scrim" data-action="close-nav"></div>
+
+    <div class="main-col">
+      <header class="topbar">
+        <button class="btn btn-ghost btn-icon menu-btn" data-action="open-nav" aria-label="Abrir menu">☰</button>
+        <div class="crumbs" id="crumbs"></div>
+        <span class="saved" id="saved" aria-live="polite"></span>
+      </header>
+      <main id="main" class="page" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

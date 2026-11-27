@@ -1,0 +1,145 @@
+/* ==========================================================================
+   DESIGN SYSTEM 2027 — base.css
+   Reset moderno + padrões de documento. Tudo em @layer para nunca brigar
+   com classes utilitárias (Tailwind) ou componentes.
+   ========================================================================== */
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  html {
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    interpolate-size: allow-keywords; /* permite animar height: auto */
+  }
+  body { min-height: 100dvh; }
+  img, picture, video, canvas, svg { display: block; max-width: 100%; }
+  img, video { height: auto; }
+  input, button, textarea, select { font: inherit; color: inherit; letter-spacing: inherit; }
+  button { cursor: pointer; }
+  :disabled { cursor: not-allowed; }
+  p, h1, h2, h3, h4, h5, h6, li, figcaption { overflow-wrap: break-word; }
+  textarea { field-sizing: content; min-height: 4lh; } /* textarea cresce sozinho */
+  [hidden]:not([hidden="until-found"]) { display: none !important; }
+  table { border-collapse: collapse; }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-size: 100%;
+    font-feature-settings: var(--font-features);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scrollbar-color: var(--border-strong) transparent;
+    scrollbar-gutter: stable;
+    hanging-punctuation: first last;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: var(--font-display-weight);
+    font-style: var(--font-display-style);
+    letter-spacing: var(--font-display-tracking);
+    line-height: var(--font-display-leading);
+    text-wrap: balance;
+    color: var(--foreground);
+  }
+  h1 { font-size: var(--text-5xl); }
+  h2 { font-size: var(--text-3xl); }
+  h3 { font-size: var(--text-xl); letter-spacing: var(--tracking-tight); line-height: var(--leading-snug); }
+  h4 { font-size: var(--text-lg); letter-spacing: var(--tracking-tight); line-height: var(--leading-snug); }
+  /* Palavras longas do português em títulos grandes no celular */
+  @media (width < 40rem) {
+    h1, h2 { hyphens: auto; hyphenate-limit-chars: 8 4 4; }
+  }
+  h5, h6 { font-family: var(--font-sans); font-size: var(--text-base); letter-spacing: 0; line-height: var(--leading-snug); font-weight: var(--weight-semibold); }
+
+  p, li, dd, blockquote { text-wrap: pretty; }
+  p { max-inline-size: var(--measure); }
+
+  a {
+    color: var(--primary);
+    text-decoration-line: underline;
+    text-decoration-thickness: from-font;
+    text-decoration-color: color-mix(in oklch, currentColor 40%, transparent);
+    text-underline-offset: 0.18em;
+    transition: text-decoration-color var(--dur-fast) var(--ease-standard);
+  }
+  a:hover { text-decoration-color: currentColor; }
+
+  small { font-size: var(--text-sm); }
+  strong, b { font-weight: var(--weight-semibold); }
+  code, kbd, samp, pre { font-family: var(--font-mono); font-size: 0.9em; }
+  :not(pre) > code {
+    padding: 0.1em 0.35em;
+    border-radius: var(--radius-xs);
+    background: var(--muted);
+    border: 1px solid var(--border);
+  }
+  pre {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    overflow-x: auto;
+    font-size: var(--text-ui-sm);
+    line-height: var(--leading-relaxed);
+  }
+  hr { border: 0; border-top: 1px solid var(--border); }
+
+  /* Números alinhados em tabelas e métricas */
+  table, .tabular { font-variant-numeric: tabular-nums; }
+
+  ::selection { background: var(--selection); color: var(--foreground); }
+
+  /* Foco visível só para teclado */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* Âncoras não ficam sob header fixo */
+  :target { scroll-margin-block-start: calc(var(--header-h, 4rem) + var(--space-4)); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html:focus-within { scroll-behavior: smooth; }
+  }
+
+  /* Movimento reduzido: tudo instantâneo */
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --dur-instant: 1ms; --dur-fast: 1ms; --dur-base: 1ms; --dur-slow: 1ms; --dur-slower: 1ms;
+    }
+    *, *::before, *::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Contraste aumentado pedido pelo sistema */
+  @media (prefers-contrast: more) {
+    :root, [data-theme] {
+      --border: var(--border-strong);
+      --muted-foreground: var(--foreground);
+    }
+  }
+
+  /* Alvos de toque mínimos em telas de toque */
+  @media (pointer: coarse) {
+    :where(button, [role="button"], input:not([type="checkbox"], [type="radio"]), select, .btn) {
+      min-block-size: var(--touch-min);
+    }
+  }
+}

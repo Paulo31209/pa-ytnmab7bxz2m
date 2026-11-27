@@ -1,0 +1,51 @@
+{
+  "name": "plano-de-acao",
+  "productName": "Plano de Ação",
+  "version": "1.0.0",
+  "description": "Plano de ação estilo Notion: demandas, checklists, inventário de servidores e diário. Dados salvos em Documentos\\Plano de Ação.",
+  "author": "Plano de Ação",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "45.3.1",
+    "electron-builder": "26.18.1"
+  },
+  "build": {
+    "appId": "local.planodeacao.app",
+    "productName": "Plano de Ação",
+    "copyright": "Plano de Ação",
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "app.js",
+      "app.css",
+      "data.js",
+      "ds/**/*",
+      "build/icon.png"
+    ],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "win": {
+      "target": ["nsis"],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Plano de Ação",
+      "artifactName": "Plano-de-Acao-Setup-${version}.${ext}",
+      "installerLanguages": ["pt_BR"],
+      "language": "1046"
+    }
+  }
+}

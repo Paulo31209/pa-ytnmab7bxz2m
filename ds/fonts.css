@@ -1,0 +1,114 @@
+/* ==========================================================================
+   DESIGN SYSTEM 2027 — fonts.css
+   Uso: <html data-font="geist">
+   Este arquivo só define as famílias. Carregue APENAS a fonte escolhida
+   (link abaixo de cada bloco, ou next/font, ou @fontsource). Ver
+   references/tipografia.md. Nunca carregue as 9 em produção.
+   ========================================================================== */
+
+@layer tokens {
+  :root {
+    --font-display-weight: 650;
+    --font-display-tracking: var(--tracking-display);
+    --font-display-leading: var(--leading-tight);
+    --font-display-style: normal;
+    --font-features: "kern", "liga", "calt";
+  }
+
+  /* GEIST — neutra, precisa, cara de produto. Padrão para SaaS e painéis.
+     https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap */
+  [data-font="geist"] {
+    --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Geist", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, monospace;
+    --font-display-weight: 600;
+  }
+
+  /* INTER — máxima legibilidade em telas densas; Inter Tight nos títulos.
+     https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Inter+Tight:wght@100..900&family=JetBrains+Mono:wght@100..800&display=swap */
+  [data-font="inter"] {
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-display-weight: 650;
+    --font-features: "kern", "liga", "calt", "cv11", "ss03";
+  }
+
+  /* PLUS JAKARTA SANS — geométrica amigável, ótima em português.
+     https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=JetBrains+Mono:wght@100..800&display=swap */
+  [data-font="jakarta"] {
+    --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-display-weight: 700;
+    --font-display-tracking: -0.03em;
+  }
+
+  /* MANROPE — moderna e técnica, números bonitos (finanças, métricas).
+     https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=JetBrains+Mono:wght@100..800&display=swap */
+  [data-font="manrope"] {
+    --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-display-weight: 750;
+    --font-display-tracking: -0.03em;
+  }
+
+  /* BRICOLAGE + ONEST — display expressivo com personalidade; corpo limpo.
+     Landing pages, marcas jovens, criativo.
+     https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Onest:wght@100..900&family=Geist+Mono:wght@100..900&display=swap */
+  [data-font="bricolage"] {
+    --font-sans: "Onest", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, monospace;
+    --font-display-weight: 700;
+    --font-display-tracking: -0.04em;
+    --font-display-leading: 1.02;
+  }
+
+  /* SPACE GROTESK + DM SANS — técnico, levemente excêntrico. Dev tools, cripto, IA.
+     https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=DM+Sans:opsz,wght@9..40,100..1000&family=Space+Mono:wght@400;700&display=swap */
+  [data-font="grotesk"] {
+    --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Space Mono", ui-monospace, monospace;
+    --font-display-weight: 600;
+    --font-display-tracking: -0.035em;
+  }
+
+  /* EDITORIAL — Instrument Serif nos títulos + Instrument Sans no corpo.
+     Revistas, portfólios, institucional, luxo discreto. Serif só tem peso 400.
+     https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@100..800&display=swap */
+  [data-font="editorial"] {
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+    --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-display-weight: 400;
+    --font-display-tracking: -0.015em;
+    --font-display-leading: 1.04;
+  }
+
+  /* FRAUNCES + FIGTREE — serifada calorosa com eixo óptico; corpo humanista.
+     Educação, gastronomia, editoras, ONGs.
+     https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,100..900&family=Figtree:wght@300..900&family=JetBrains+Mono:wght@100..800&display=swap */
+  [data-font="fraunces"] {
+    --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Fraunces", ui-serif, Georgia, serif;
+    --font-serif: "Fraunces", ui-serif, Georgia, serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-display-weight: 560;
+    --font-display-tracking: -0.025em;
+  }
+
+  /* IBM PLEX — família completa (sans, serif, mono). Corporativo, governo, jurídico, dados.
+     https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap */
+  [data-font="plex"] {
+    --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-serif: "IBM Plex Serif", ui-serif, Georgia, serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+    --font-display-weight: 600;
+    --font-display-tracking: -0.02em;
+  }
+}

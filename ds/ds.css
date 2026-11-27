@@ -1,0 +1,14 @@
+/* ==========================================================================
+   DESIGN SYSTEM 2027 — ds.css (entrada única para projetos SEM Tailwind)
+   <link rel="stylesheet" href="/ds/ds.css">
+   Ordem das camadas: a última vence. Seus estilos fora de @layer vencem todas.
+   ========================================================================== */
+@layer reset, tokens, base, layout, components, effects, utilities;
+
+@import url("./tokens.css");
+@import url("./themes.css");
+@import url("./fonts.css");
+@import url("./base.css");
+@import url("./layout.css");
+@import url("./components.css");
+@import url("./effects.css");
