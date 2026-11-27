@@ -1,12 +1,12 @@
 {
- "atualizado": "2026-11-27T21:21:26.109Z",
+ "atualizado": "2026-11-27T21:49:31.425Z",
  "demandas": [
   {
    "num": "0",
    "icon": "🌐",
    "title": "Rede dedicada full duplex / IP dedicado (2 a 5 Gbps)",
    "summary": "Link simétrico com banda garantida e IP fixo para a origem das lives e os servidores.",
-   "status": "todo",
+   "status": "doing",
    "priority": "Crítica",
    "area": "Infraestrutura",
    "owner": "",
@@ -137,7 +137,7 @@
    "icon": "📡",
    "title": "Servidor local redundante da live com buffer (DVR)",
    "summary": "Servidor local recebe a live em paralelo, guarda o buffer e o player deixa voltar, adiantar 15 s ou ir AO VIVO.",
-   "status": "todo",
+   "status": "doing",
    "priority": "Alta",
    "area": "Streaming",
    "owner": "",
@@ -145,31 +145,31 @@
    "tasks": [
     {
      "text": "Escolher o software do servidor local (SRS ou MediaMTX)",
-     "done": false
+     "done": true
     },
     {
      "text": "Configurar a entrada RTMP/SRT no servidor local",
-     "done": false
+     "done": true
     },
     {
      "text": "Configurar o encoder (OBS/vMix) para enviar a 2 destinos ao mesmo tempo",
-     "done": false
+     "done": true
     },
     {
      "text": "Configurar HLS com janela de DVR (ex.: 2 horas)",
-     "done": false
+     "done": true
     },
     {
      "text": "Player: botões −15 s / +15 s e botão AO VIVO",
-     "done": false
+     "done": true
     },
     {
      "text": "Player: ao reconectar, perguntar “continuar de onde parou ou ir ao vivo?”",
-     "done": false
+     "done": true
     },
     {
      "text": "Player: troca automática do servidor principal para o local",
-     "done": false
+     "done": true
     },
     {
      "text": "Teste: derrubar o servidor principal durante uma live de teste",
@@ -177,7 +177,7 @@
     },
     {
      "text": "Teste: cortar a internet do espectador por 1 min e voltar",
-     "done": false
+     "done": true
     }
    ]
   },
