@@ -1,12 +1,12 @@
 {
- "atualizado": "2026-11-27T21:10:05.102Z",
+ "atualizado": "2026-11-27T21:10:36.099Z",
  "demandas": [
   {
    "num": "0",
    "icon": "🌐",
    "title": "Rede dedicada full duplex / IP dedicado (2 a 5 Gbps)",
    "summary": "Link simétrico com banda garantida e IP fixo para a origem das lives e os servidores.",
-   "status": "doing",
+   "status": "todo",
    "priority": "Crítica",
    "area": "Infraestrutura",
    "owner": "",
@@ -14,7 +14,7 @@
    "tasks": [
     {
      "text": "Medir o consumo de banda atual (pico durante uma live)",
-     "done": true
+     "done": false
     },
     {
      "text": "Calcular a banda necessária (bitrate × espectadores × margem de 40%)",
