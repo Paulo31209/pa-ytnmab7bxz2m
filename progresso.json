@@ -1,12 +1,12 @@
 {
- "atualizado": "2026-11-27T21:10:36.099Z",
+ "atualizado": "2026-11-27T21:19:48.101Z",
  "demandas": [
   {
    "num": "0",
    "icon": "🌐",
    "title": "Rede dedicada full duplex / IP dedicado (2 a 5 Gbps)",
    "summary": "Link simétrico com banda garantida e IP fixo para a origem das lives e os servidores.",
-   "status": "todo",
+   "status": "doing",
    "priority": "Crítica",
    "area": "Infraestrutura",
    "owner": "",
